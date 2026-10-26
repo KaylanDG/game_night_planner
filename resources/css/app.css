@@ -1,0 +1,232 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+@theme {
+    --font-sans: 'VT323', ui-monospace, monospace;
+    --font-pixel: 'Press Start 2P', ui-monospace, monospace;
+
+    --color-ink: #0b0b1a;
+    --color-night: #0f0f22;
+    --color-panel: #15152b;
+    --color-panel-dim: #111124;
+    --color-track: #22223f;
+    --color-line: #2e2e5c;
+    --color-edge: #4a4a8a;
+    --color-text: #e8e6ff;
+    --color-soft: #c9c7f0;
+    --color-muted: #9a98c8;
+    --color-yellow: #ffd23e;
+    --color-cyan: #3ef0ff;
+    --color-pink: #ff5c8a;
+    --color-orange: #ff8a3d;
+    --color-green: #5cff9d;
+    --color-purple: #8b7cff;
+}
+
+@layer base {
+    html {
+        color-scheme: dark;
+    }
+
+    body {
+        @apply bg-ink font-sans text-text;
+    }
+
+    a {
+        @apply text-cyan hover:text-yellow;
+    }
+
+    :focus-visible {
+        outline: 3px solid var(--color-yellow);
+        outline-offset: 3px;
+    }
+}
+
+@layer components {
+    /* Faint CRT scanlines over the whole page. */
+    .scanlines::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 50;
+        background: repeating-linear-gradient(0deg, rgb(255 255 255 / 0.03) 0 1px, transparent 1px 3px);
+    }
+
+    .label {
+        @apply m-0 font-pixel text-[10px] leading-normal tracking-[1px] text-muted uppercase;
+    }
+
+    .panel {
+        @apply box-border border-3 border-line bg-panel shadow-[6px_6px_0_#000];
+    }
+
+    .nav-link {
+        @apply box-border inline-flex min-h-11 items-center border-3 border-transparent px-3.5 py-[13px] font-pixel text-[11px] leading-none text-soft uppercase no-underline hover:text-yellow;
+    }
+
+    .nav-link[aria-current='page'] {
+        @apply border-black bg-cyan text-ink shadow-[3px_3px_0_#000] hover:text-ink;
+    }
+
+    .btn {
+        @apply box-border inline-flex min-h-11 cursor-pointer items-center justify-center gap-2.5 border-3 border-black px-[18px] py-[13px] font-pixel text-[11px] leading-[1.3] uppercase no-underline shadow-[4px_4px_0_#000];
+    }
+
+    .btn:active:not(:disabled) {
+        @apply translate-x-1 translate-y-1 shadow-none;
+    }
+
+    .btn:disabled {
+        @apply cursor-not-allowed border-line bg-track text-muted shadow-none;
+    }
+
+    .btn-yellow {
+        @apply bg-yellow text-ink hover:bg-[#ffe07a] hover:text-ink;
+    }
+
+    .btn-cyan {
+        @apply bg-cyan text-ink hover:bg-[#8af6ff] hover:text-ink;
+    }
+
+    .btn-green {
+        @apply bg-green text-ink hover:bg-[#8affbb] hover:text-ink;
+    }
+
+    .btn-orange {
+        @apply bg-orange text-ink hover:text-ink;
+    }
+
+    .btn-ghost {
+        @apply border-edge bg-panel text-text hover:border-yellow hover:text-yellow;
+    }
+
+    .btn-dark {
+        @apply border-edge bg-night text-text hover:border-yellow hover:text-yellow;
+    }
+
+    .field {
+        @apply box-border min-h-14 w-full border-3 border-edge bg-ink px-3.5 py-2.5 font-sans text-[26px] text-text placeholder:text-muted focus:border-cyan focus:shadow-[4px_4px_0_#000] focus:outline-none;
+    }
+
+    .field[aria-invalid='true'] {
+        @apply border-orange;
+    }
+
+    .field-error {
+        @apply m-0 flex items-center gap-2 text-[22px] text-orange;
+    }
+
+    .chip {
+        @apply border-3 border-edge bg-panel px-2.5 py-2 font-pixel text-[9px] text-text uppercase;
+    }
+
+    .badge {
+        @apply self-start border-2 border-black px-2 py-1.5 font-pixel text-[8px] text-ink uppercase;
+    }
+
+    /* Checkered pixel cover used when a game has no IGDB artwork. */
+    .cover {
+        @apply box-border flex items-center justify-center overflow-hidden border-3 border-black text-center font-pixel leading-[1.4] text-ink;
+        background-image:
+            linear-gradient(45deg, rgb(0 0 0 / 0.16) 25%, transparent 25%, transparent 75%, rgb(0 0 0 / 0.16) 75%),
+            linear-gradient(45deg, rgb(0 0 0 / 0.16) 25%, transparent 25%, transparent 75%, rgb(0 0 0 / 0.16) 75%);
+        background-size: 16px 16px;
+        background-position: 0 0, 8px 8px;
+    }
+
+    .choice {
+        @apply flex min-h-11 cursor-pointer items-center gap-4 border-3 border-line bg-night px-4 py-3.5 hover:border-cyan;
+    }
+
+    .choice:has(input:checked) {
+        @apply border-green bg-[#16261e];
+    }
+
+    .choice:has(input:disabled) {
+        @apply cursor-not-allowed opacity-60 hover:border-line;
+    }
+
+    .choice input {
+        @apply m-0 size-6 flex-none accent-green;
+    }
+
+    .lift {
+        @apply transition-[transform,box-shadow] duration-75;
+    }
+
+    .group:hover .lift {
+        @apply -translate-x-0.5 -translate-y-0.5 border-cyan shadow-[8px_8px_0_#000];
+    }
+
+    .modal {
+        @apply m-auto w-[calc(100%-48px)] max-w-[540px] border-3 bg-panel p-7 text-text shadow-[10px_10px_0_#000];
+    }
+
+    .modal::backdrop {
+        background: rgb(5 5 14 / 0.82);
+    }
+
+    .roulette-wheel {
+        transform-origin: 50% 50%;
+        will-change: transform;
+    }
+
+    .roulette-segment {
+        transition: opacity 0.3s;
+    }
+
+    .roulette-wheel[data-won] .roulette-segment:not([data-winner]) {
+        opacity: 0.35;
+    }
+
+    .roulette-segment[data-winner] :is(path, circle) {
+        stroke: var(--color-text);
+        stroke-width: 3;
+    }
+
+    .confetti {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+    }
+
+    .confetti span {
+        position: absolute;
+        top: -12px;
+        left: var(--x);
+        width: 8px;
+        height: 12px;
+        animation: confetti-fall var(--duration) var(--delay) cubic-bezier(0.25, 0.6, 0.4, 1) forwards;
+    }
+
+    @keyframes confetti-fall {
+        to {
+            transform: translate(var(--drift), 110vh) rotate(var(--spin));
+            opacity: 0.6;
+        }
+    }
+
+    .blink {
+        animation: blink 1s steps(1) infinite;
+    }
+
+    @keyframes blink {
+        50% {
+            opacity: 0;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .blink {
+            animation: none;
+        }
+
+        .lift {
+            transition: none;
+        }
+    }
+}
