@@ -5,6 +5,9 @@ FROM dunglas/frankenphp:1-php8.4 AS base
 
 RUN install-php-extensions pdo_pgsql intl zip opcache pcntl
 
+# We bind to $PORT (not 80/443), so drop the file capability that Render's sandbox refuses to exec.
+RUN setcap -r /usr/local/bin/frankenphp
+
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app
@@ -35,8 +38,7 @@ FROM vendor AS app
 COPY --from=assets /app/public/build ./public/build
 
 RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views storage/logs bootstrap/cache \
-    && php artisan package:discover --ansi \
-    && chown -R www-data:www-data storage bootstrap/cache
+    && php artisan package:discover --ansi
 
 ENV APP_ENV=production \
     APP_DEBUG=false \
